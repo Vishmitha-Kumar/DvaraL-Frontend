@@ -8,6 +8,10 @@ import Favourites from './Pages/user-pages/Favourites';
 import About from './Pages/user-pages/About';
 import { Toaster } from 'react-hot-toast';
 import RequestManagement from './Pages/admin-pages/RequestManagement';
+import ManagerDashboard from './Pages/manager-pages/ManagerDashboard';
+import HallBookingRequests from './Pages/manager-pages/HallBookingRequests';
+import HallDetailsForm from './Pages/manager-pages/HallDetailsForm';
+import HallEditForm from './Pages/manager-pages/HallEditForm';
 
 
 function App() {
@@ -27,6 +31,10 @@ function App() {
         <Route path = "/favourite-halls" element = {<Favourites/>}/>
         <Route path = "/about" element = {<About/>}/>
         <Route path = "/request-management" element = {<RequestManagement/>}/>
+        <Route path = "/manager-dashboard" element = {<ManagerDashboard/>} />
+        <Route path = "/hall-requests" element = {<HallBookingRequests/>} />
+        <Route path = "/add-hall" element = {<HallDetailsForm/>} />
+        <Route path = "/edit-hall" element = {<HallEditForm/>} />
       </Routes>
 
     </>

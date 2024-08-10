@@ -128,9 +128,10 @@
 // export default SignIn;
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../../services/auth';
 
 const SignIn = ({ onLogin }) => {
 
@@ -139,47 +140,91 @@ const SignIn = ({ onLogin }) => {
 
     const [error, setError] = useState('');
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  //   const checkRedirect = async () => {
+  //     if (authService.getToken() !== null && authService.isLoggedIn()) {
+  //         const userRole = authService.getUserRole();
+  //         if (userRole !== null) {
+  //             if (userRole === "MANAGER") {
+  //                 navigate('/request-management');
+  //             } else if (userRole === "USER") {
+  //                 navigate('/dashboard');
+  //             } else {
+  //                 toast.error("Something went wrong");
+  //             }
+  //         }
+  //     }
+  // };
 
-    const users = [
-        { email: 'Zaynaa@gmail.com', password: 'user', role: 'user' },
-        { email: 'admin@gmail.com', password: 'admin', role: 'admin' }
-    ];
+  // useEffect(() => {
+  //     checkRedirect();
+  // }, []);
+
+    const emailRef = useRef(null)
+    const passwordRef = useRef(null)
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        const res = await authService.SignIn(emailRef.current.value, passwordRef.current.value)
+        console.log(res.data);
+
+        if (res.status === 200 && res.data.role == 'USER') {
+            authService.setToken(res.data.token)
+            navigate('/dashboard');
+            setTimeout(() => {
+            }, 3000)
+
+        }
+        else if(res.status === 200 && res.data.role === 'MANAGER'){
+          navigate('/manager-dashboard');
+        }
+
+        else if (res.status === 200 && res.data.role === 'ADMIN'){
+          navigate('/request-management');
+        }
+    };
+
+
+
+    // const users = [
+    //     { email: 'Zaynaa@gmail.com', password: 'user', role: 'user' },
+    //     { email: 'admin@gmail.com', password: 'admin', role: 'admin' }
+    // ];
 
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    e.preventDefault();
-            setError('');
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   e.preventDefault();
+  //           setError('');
     
-            const user = users.find(u => u.email === email && u.password === password);
+  //           const user = users.find(u => u.email === email && u.password === password);
     
-            if (user) {
+  //           if (user) {
                 
-                alert(`Logged in successfully as ${user.role}`);
-                onLogin({ email });
+  //               alert(`Logged in successfully as ${user.role}`);
+  //               onLogin({ email });
     
-                if(user.role === 'user')
-                    navigate('/dashboard');
-                else
-                    navigate('/request-management');
-                setEmail('');
-                setPassword('');
+  //               if(user.role === 'user')
+  //                   navigate('/dashboard');
+  //               else
+  //                   navigate('/request-management');
+  //               setEmail('');
+  //               setPassword('');
                
-            } else {
+  //           } else {
               
-                setError('Invalid email or password');
-                setEmail('');
-                setPassword(''); 
-            }
-  };
+  //               setError('Invalid email or password');
+  //               setEmail('');
+  //               setPassword(''); 
+  //           }
+  // };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
       <div className="mb-4">
         <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
           Email
@@ -188,6 +233,7 @@ const SignIn = ({ onLogin }) => {
           <input
             type="email"
             id="email"
+            ref={emailRef} 
             className="w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your email"
             value={email}
@@ -205,6 +251,7 @@ const SignIn = ({ onLogin }) => {
           <input
             type={showPassword ? 'text' : 'password'}
             id="password"
+            ref={passwordRef}
             className="w-full px-3 py-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your password"
             value={password}

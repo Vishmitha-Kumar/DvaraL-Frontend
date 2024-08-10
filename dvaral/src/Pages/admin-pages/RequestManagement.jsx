@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../../services/auth';
 
 import RequestSummary from './RequestSidePanel';
 
@@ -119,9 +120,9 @@ function RequestManagement() {
     };
 
     const handleLogout = () => {
-        navigate('/');
-        console.log("Logout button clicked");
-    };
+        authService.SignOut()
+        navigate('/')
+    }
 
     if (showSummary) {
         return <RequestSummary requests={requests} onClose={handleCloseSummary} />;

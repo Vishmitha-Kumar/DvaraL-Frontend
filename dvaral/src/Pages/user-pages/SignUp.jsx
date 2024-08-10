@@ -1,37 +1,79 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { SignUpData } from '../../services/api';
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setError('');
-
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            setPassword('');
-            setConfirmPassword('');
-            return;
+    const togglePasswordVisibility = (field) => {
+        if (field === 'password') {
+            setShowPassword(!showPassword);
+        } else if (field === 'confirmPassword') {
+            setShowConfirmPassword(!showConfirmPassword);
         }
-        
-        toast.success('Registered successfully!');
-
-        console.log('Sign up successful', { name, email, password });
-        setName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
     };
+
+    const [registerdata, setRegisterdata] = useState({
+        name: '',
+        email: '',
+        password: '',
+        cpassword: '',
+        role: ''
+    })
+
+
+    const handleChange = (e) => {
+        setRegisterdata({ ...registerdata, [e.target.id]: e.target.value })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        console.log(registerdata);
+        const res = await SignUpData(registerdata.name, registerdata.email, registerdata.password, registerdata.role = 'USER');
+
+        if (res.status === 200) {
+            setTimeout(() => {
+                setRegisterdata({
+                    name: '',
+                    email: '',
+                    password: '',
+                    cpassword: ''
+                });
+                // navigate('/login')
+                toast.success("Registered successfully!")
+            }, 5000)
+        }
+        else {
+            toast.error(res.data)
+
+        }
+
+    }
+
+
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     setError('');
+
+    //     if (password !== confirmPassword) {
+    //         setError('Passwords do not match');
+    //         setPassword('');
+    //         setConfirmPassword('');
+    //         return;
+    //     }
+
+    //     toast.success('Registered successfully!');
+
+    //     console.log('Sign up successful', { name, email, password });
+    //     setName('');
+    //     setEmail('');
+    //     setPassword('');
+    //     setConfirmPassword('');
+    // };
 
     return (
         <>
@@ -55,8 +97,8 @@ const SignUp = () => {
                             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Enter your full name"
                             required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            // value={name}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
@@ -74,8 +116,8 @@ const SignUp = () => {
                             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Enter your email"
                             required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            // value={email}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
@@ -93,13 +135,13 @@ const SignUp = () => {
                             className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Create a password"
                             required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            // value={password}
+                            onChange={handleChange}
                         />
                         <button
                             type="button"
                             className="absolute inset-y-0 right-0 flex items-center pr-3"
-                            onClick={togglePasswordVisibility}
+                            onClick={() => togglePasswordVisibility('password')}
                         >
                             {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
                         </button>
@@ -114,15 +156,27 @@ const SignUp = () => {
                             <Lock className="h-5 w-5 text-gray-400" />
                         </span>
                         <input
-                            type={showPassword ? "text" : "password"}
+                            type={showConfirmPassword ? "text" : "password"}
                             id="confirmPassword"
                             className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Confirm your password"
                             required
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            // value={confirmPassword}
+                            onChange={handleChange}
                         />
+                        <button
+                            type="button"
+                            className="absolute inset-y-0 right-0 flex items-center pr-3"
+                            onClick={() => togglePasswordVisibility('confirmPassword')}
+                        >
+                            {showConfirmPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                        </button>
                     </div>
+                </div>
+                <div className="mt-4 text-center">
+                    <Link to="/hall-owner-registration" className="text-blue-600 hover:underline">
+                        Looking to Add Your Hall? Sign Up Here
+                    </Link>
                 </div>
                 <button
                     type="submit"
@@ -136,4 +190,3 @@ const SignUp = () => {
 }
 
 export default SignUp;
-
