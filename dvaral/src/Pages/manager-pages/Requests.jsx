@@ -1,7 +1,7 @@
 import React from "react";
 
 const Requests = ({ status }) => {
-  // This is mock data. In a real application, you'd fetch this data from an API
+  
   const mockRequests = [
     { id: 1, name: "John Doe", date: "2024-08-15", hallName: "Grand Hall" },
     { id: 2, name: "Jane Smith", date: "2024-08-20", hallName: "Crystal Room" },

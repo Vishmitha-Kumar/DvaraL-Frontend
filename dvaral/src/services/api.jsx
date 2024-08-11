@@ -39,7 +39,25 @@ const getHallByid = (hallID) =>
 const bookHall = (hallID, userName, userEmail, userPhone, requestedDate, requestedTime , noOfGuest, eventType, specialRequests, bookingStatus) =>
     axiosInstance.post(`${baseURL}/v2/hall/add/booking-details/${hallID}`, {userName, userEmail, userPhone, requestedDate, requestedTime , noOfGuest, eventType, specialRequests, bookingStatus});
 
+const getRequestForManager = () =>
+    axiosInstance.get(`${baseURL}/v2/hall/fetch/booking-requests`);
 
 
-export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall}
+const updateBookingStatus = (bookingID, bookingStatus) =>
+    axiosInstance.patch(`${baseURL}/v2/hall/update-status/${bookingID}`, {bookingStatus}, {
+         'Content-Type': 'application/json'
+    });
+
+
+const addToFav = (hallID) =>
+    axiosInstance.post(`${baseURL}/v2/halls/add-to-fav/${hallID}`);
+
+const getFavsForUser = () =>
+    axiosInstance.get(`${baseURL}/v2/halls/get-favourite`);
+
+const getReservedHallsForUser = () =>
+    axiosInstance.get(`${baseURL}/v2/hall/fetch/booked-by-user`);
+
+
+export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall, getRequestForManager, updateBookingStatus, addToFav, getFavsForUser, getReservedHallsForUser}
 

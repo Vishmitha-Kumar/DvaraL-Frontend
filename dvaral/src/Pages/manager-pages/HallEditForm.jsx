@@ -52,22 +52,8 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         }
     };
 
-    const InputField = ({ icon: Icon, ...props }) => (
-        <div className="relative mb-4">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Icon className="h-5 w-5 text-gray-400" />
-            </div>
-            <input
-                className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isEditing ? 'bg-white' : 'bg-gray-100'
-                }`}
-                {...props}
-                disabled={!isEditing}
-                onChange={handleInputChange}
-                value={formData[props.name] || ''}
-            />
-        </div>
-    );
+
+
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">
@@ -103,35 +89,196 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="hallOwner" className="block text-sm font-medium text-gray-700 mb-1">Hall Owner</label>
-                                    <InputField icon={User} name="hallOwner" id="hallOwner" placeholder="Hall Owner" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <User className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallOwner"
+                                            id="hallOwner"
+                                            placeholder="Hall Owner"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallOwner}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallName" className="block text-sm font-medium text-gray-700 mb-1">Hall Name</label>
-                                    <InputField icon={Home} name="hallName" id="hallName" placeholder="Hall Name" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Home className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallName"
+                                            id="hallName"
+                                            placeholder="Hall Name"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallName}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallType" className="block text-sm font-medium text-gray-700 mb-1">Hall Type</label>
-                                    <InputField icon={Type} name="hallType" id="hallType" placeholder="Hall Type" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Type className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallType"
+                                            id="hallType"
+                                            placeholder="Hall Type"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallType}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallLocation" className="block text-sm font-medium text-gray-700 mb-1">Hall Location</label>
-                                    <InputField icon={MapPin} name="hallLocation" id="hallLocation" placeholder="Hall Location" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <MapPin className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallLocation"
+                                            id="hallLocation"
+                                            placeholder="Hall Location"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallLocation}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="hallStatus" className="block text-sm font-medium text-gray-700 mb-1">Hall Status</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Star className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallStatus"
+                                            id="hallStatus"
+                                            placeholder="Hall Status"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallStatus}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="hallRating" className="block text-sm font-medium text-gray-700 mb-1">Hall Rating</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Star className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            type="number"
+                                            name="hallRating"
+                                            id="hallRating"
+                                            placeholder="Hall Rating"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallRating}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallAddress" className="block text-sm font-medium text-gray-700 mb-1">Hall Address</label>
-                                    <InputField icon={MapPin} name="hallAddress" id="hallAddress" placeholder="Hall Address" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <MapPin className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallAddress"
+                                            id="hallAddress"
+                                            placeholder="Hall Address"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallAddress}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallContact" className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
-                                    <InputField icon={Phone} name="hallContact" id="hallContact" placeholder="Contact Number" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Phone className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            name="hallContact"
+                                            id="hallContact"
+                                            placeholder="Contact Number"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallContact}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="capacity" className="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
-                                    <InputField icon={Users} name="capacity" id="capacity" type="number" placeholder="Capacity" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Users className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            type="number"
+                                            name="capacity"
+                                            id="capacity"
+                                            placeholder="Capacity"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.capacity}
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="hallPrice" className="block text-sm font-medium text-gray-700 mb-1">Hall Price</label>
-                                    <InputField icon={DollarSign} name="hallPrice" id="hallPrice" type="number" placeholder="Hall Price" />
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <DollarSign className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            type="number"
+                                            name="hallPrice"
+                                            id="hallPrice"
+                                            placeholder="Hall Price"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            defaultValue={formData.hallPrice}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mt-4">
@@ -150,7 +297,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                         placeholder="Hall Description"
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
-                                        value={formData.hallDescription || ''}
+                                        defaultValue={formData.hallDescription}
                                     ></textarea>
                                 </div>
                             </div>
@@ -160,6 +307,26 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                         <Save size={18} className="mr-2" />
                                         Save Changes
                                     </button>
+                                </div>
+                            )}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <Modal 
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onConfirm={handleConfirmEdit}
+                />
+            </div>
+    );
+};
+
+export default HallEditForm;
+
+
+{/* 
+</button>
                                 </div>
                             )}
                         </form>
@@ -175,4 +342,4 @@ const HallEditForm = ({ initialData, onSubmit }) => {
     );
 };
 
-export default HallEditForm;
+export default HallEditForm; */}

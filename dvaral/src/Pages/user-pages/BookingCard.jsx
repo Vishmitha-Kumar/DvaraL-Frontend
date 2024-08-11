@@ -106,7 +106,8 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin } from "lucide-react";
 
-import { getAllHalls } from '../../services/api';
+import { getAllHalls, addToFav } from '../../services/api';
+
 
 const notify = () => toast.success('Added to your favorites!');
 
@@ -146,6 +147,21 @@ export function BookingCard() {
   const hallView = (hallID) => {
   navigate(`/hall-view/${hallID}`)
   }
+
+  const addFavs = async (hallID) =>{
+
+    const res = await addToFav(hallID);
+    if(res.status === 200){
+      toast.success("Added to favorites");
+
+
+    }
+    console.log("fav");
+    
+    notify;
+  }
+
+
 
 
   // console.log()
@@ -216,7 +232,7 @@ export function BookingCard() {
                   src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
                   alt={hall.hallName}
                 />
-                <button onClick={notify}
+                <button onClick= {() => addFavs(hall.hallID)}
                   className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
                   aria-label="Like"
                 >
