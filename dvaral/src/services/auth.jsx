@@ -21,6 +21,25 @@ const getUserEmail = () => {
     return null;
 }
 
+const getUserIdByEmail = async (email) => {
+    try {
+        const response = await axiosInstance.get(`/v2/auth/getUserId`, { params: { email } });
+        return response.data; 
+    } catch (error) {
+        console.error('Error fetching user ID by email:', error);
+        throw error;
+    }
+}
+
+const getUserID = async () => {
+    const email = getUserEmail();
+    if (email) {
+        return await getUserIdByEmail(email);
+    }
+    return null;
+}
+
+
 const getUserRole = () => {
     const token = getToken();
     if (token) {
@@ -44,4 +63,4 @@ const SignIn = (email, password) => axiosInstance.post("v1/auth/authenticate", {
 const SignOut = () => localStorage.clear()
 
 
-export const authService = { getToken, setToken, getUserEmail, getUserRole, isLoggedIn, SignIn, SignOut };
+export const authService = { getToken, setToken, getUserEmail, getUserIdByEmail, getUserID, getUserRole, isLoggedIn, SignIn, SignOut };

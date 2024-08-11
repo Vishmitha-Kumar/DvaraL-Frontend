@@ -9,11 +9,49 @@ import HallImg1 from '/src/assets/images/HallImg1.avif';
 import HallImg2 from '/src/assets/images/HallImg2.webp';
 import HallImg3 from '/src/assets/images/HallImg3.jpeg';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getHallByid } from "../../services/api";
 
 
 const HallView = () => {
+
+  const {hallID} = useParams();
+
   const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [hallDetails, setHallDetails] = useState([
+    {
+      hallID: '',
+      hallOwner : '',
+      hallName : '',
+      hallType : '',
+      hallLocation : '',
+      hallDescription : '',
+      hallRating : '',
+      hallAddress : '',
+      hallContact : '',
+      capacity : '',
+      hallPrice : ''
+    }
+  ]);
+
+
+  const getHall = async () => {
+
+    console.log("hall id : " + hallID);
+
+
+    const res = await getHallByid(hallID);
+    console.log(res.data);
+    setHallDetails(res.data);
+    };
+  
+    useEffect(() => {
+    console.log("use");
+    getHall()
+  },[])
+
+
 
 
   const hallData = {
@@ -51,28 +89,28 @@ const HallView = () => {
           {/* Sidebar */}
           <UserSideBar />
 
-          <main className="flex-grow p-6 overflow-y-auto">
+          <main className="flex-grow p-6 overflow-y-auto w-[450%]">
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h1 className="text-3xl font-semibold text-blue-900">{hallData.name}</h1>
+              <h1 className="text-3xl font-semibold text-blue-900">{hallDetails.hallName}</h1>
               <div className="flex items-center mt-2">
                 <MapPin className="h-5 w-5 text-gray-500 mr-2" />
-                <p className="text-gray-600">{hallData.location}</p>
+                <p className="text-gray-600">{hallDetails.hallLocation}, Tamil Nadu</p>
               </div>
               <div className="flex items-center mt-2">
                 <Star className="h-5 w-5 text-yellow-400 mr-2" />
-                <p className="text-gray-700 font-semibold">{hallData.rating} / 5</p>
+                <p className="text-gray-700 font-semibold">{hallDetails.hallRating} / 5</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold mb-4">About this venue</h2>
-                <p className="text-gray-600">{hallData.description}</p>
+                <p className="text-gray-600">{hallDetails.description}</p>
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold mb-2">Key Features</h3>
                   <ul className="list-disc list-inside text-gray-600">
-                    <li>Capacity: {hallData.capacity} guests</li>
-                    <li>Price: ${hallData.price} per day</li>
+                    <li>Capacity: {hallDetails.capacity} guests</li>
+                    <li>Price: Rs. {hallDetails.hallPrice} per day</li>
                   </ul>
                 </div>
               </div>
@@ -118,7 +156,7 @@ const HallView = () => {
             <div className="mt-6">
               <button
                 className="bg-blue-900 w-full text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition duration-300"
-                onClick={() => setIsReservationOpen(true)}
+                onClick={() => {setIsReservationOpen(true)}}
               >
                 Reserve Now
               </button>
@@ -126,7 +164,7 @@ const HallView = () => {
             <ReservationSheet
               isOpen={isReservationOpen}
               onClose={() => setIsReservationOpen(false)}
-              hallData={hallData}
+              hallData={hallID}
             />
           </main>
         </div>

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
-import { ClipLoader } from 'react-spinners';
+import { Mail, Lock, Eye, EyeOff, User, Home } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { SignUpData } from '../../services/api';
 
-const SignUp = ({ onSwitchToHallOwner }) => {
+const HallOwnerRegistration = ({ onSwitchToRegularSignUp }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
 
     const togglePasswordVisibility = (field) => {
         if (field === 'password') {
@@ -22,67 +20,35 @@ const SignUp = ({ onSwitchToHallOwner }) => {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
-        role: ''
+        cpassword: '',
+       
     })
-
 
     const handleChange = (e) => {
         setRegisterdata({ ...registerdata, [e.target.id]: e.target.value })
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
+        e.preventDefault()
         console.log(registerdata);
+        const res = await SignUpData(registerdata.name, registerdata.email, registerdata.password, 'MANAGER');
 
-        if(registerdata.password === registerdata.confirmPassword){
-            try {
-                const res = await SignUpData(registerdata.name, registerdata.email, registerdata.password, registerdata.role = 'USER');
-    
-                if (res.status === 200) {
-                    setRegisterdata({
-                        name: '',
-                        email: '',
-                        password: '',
-                        confirmPassword: ''
-                    });
-                    toast.success("Registered successfully!");
-                } else {
-                    toast.error(res.data);
-                }
-            } catch (error) {
-                toast.error("An error occurred during registration");
-            } finally {
-                setIsLoading(false);
-            }
-
-        }else{
-            toast.error("Password do not match!");
-            setIsLoading(false);
-        
+        if (res.status === 200) {
+            // setTimeout(() => {
+                setRegisterdata({
+                    name: '',
+                    email: '',
+                    password: '',
+                    cpassword: ''
+                    
+                });
+                toast.success("Registered successfully as Hall Owner!")
+            // },)
+        }
+        else {
+            toast.error(res.data)
         }
     }
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     setError('');
-
-    //     if (password !== confirmPassword) {
-    //         setError('Passwords do not match');
-    //         setPassword('');
-    //         setConfirmPassword('');
-    //         return;
-    //     }
-
-    //     toast.success('Registered successfully!');
-
-    //     console.log('Sign up successful', { name, email, password });
-    //     setName('');
-    //     setEmail('');
-    //     setPassword('');
-    //     setConfirmPassword('');
-    // };
 
     return (
         <>
@@ -106,7 +72,6 @@ const SignUp = ({ onSwitchToHallOwner }) => {
                             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Enter your full name"
                             required
-                            // value={name}
                             onChange={handleChange}
                         />
                     </div>
@@ -125,7 +90,6 @@ const SignUp = ({ onSwitchToHallOwner }) => {
                             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Enter your email"
                             required
-                            // value={email}
                             onChange={handleChange}
                         />
                     </div>
@@ -144,7 +108,6 @@ const SignUp = ({ onSwitchToHallOwner }) => {
                             className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Create a password"
                             required
-                            // value={password}
                             onChange={handleChange}
                         />
                         <button
@@ -166,11 +129,10 @@ const SignUp = ({ onSwitchToHallOwner }) => {
                         </span>
                         <input
                             type={showConfirmPassword ? "text" : "password"}
-                            id="confirmPassword"
+                            id="cpassword"
                             className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Confirm your password"
                             required
-                            // value={confirmPassword}
                             onChange={handleChange}
                         />
                         <button
@@ -182,29 +144,25 @@ const SignUp = ({ onSwitchToHallOwner }) => {
                         </button>
                     </div>
                 </div>
+                
                 <div className="mt-4 text-center">
-                    <button
+                    <button 
                         type="button"
-                        onClick={onSwitchToHallOwner}
+                        onClick={onSwitchToRegularSignUp}
                         className="text-blue-600 hover:underline"
                     >
-                        Looking to Add Your Hall? Sign Up Here
+                        Want to register as a regular user? Click here
                     </button>
                 </div>
                 <button
                     type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300 flex items-center justify-center"
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300"
                 >
-                    {isLoading ? (
-                        <ClipLoader color="#ffffff" size={24} />
-                    ) : (
-                        'Sign Up'
-                    )}
+                    Sign Up as Hall Owner
                 </button>
             </form>
         </>
     );
 }
 
-export default SignUp;
+export default HallOwnerRegistration;

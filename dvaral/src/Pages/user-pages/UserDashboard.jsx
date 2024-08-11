@@ -10,9 +10,11 @@ const UserDashboard = () => {
   return (
     <div className="flex flex-col min---h-screen bg-gray-100">
       <Navbar />
-      <div className="flex flex-grow overflow-hidden h-[90vh]">
+      <div className="flex flex-grow overflow-hidden">
         {/* Sidebar */}
-        <UserSideBar/>
+  
+          <UserSideBar />
+   
 
         {/* Main Content */}
         <main className="flex-grow p-6 overflow-y-auto">

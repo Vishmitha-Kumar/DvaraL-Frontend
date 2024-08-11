@@ -13,7 +13,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <aside className="w-[35%] bg-white shadow-md hidden lg:flex flex-col">
+            <aside className="w-[85%] bg-white shadow-md hidden lg:flex flex-col">
                 <nav className="flex-grow mt-10">
                     <ul>
                         {sidebarLinks.map((link, index) => (

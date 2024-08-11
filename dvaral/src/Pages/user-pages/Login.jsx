@@ -50,19 +50,28 @@
 // };
 
 // export default Login;
-
 import React, { useState } from 'react';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import { useAuth } from '../../Web/AuthContext';
+import HallOwnerRegistration from '../manager-pages/HallManagerRegistration';
+// import { useAuth } from '../../Web/AuthContext';
 
 const Login = ({ onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
-  const { login } = useAuth();
+  const [isHallOwnerRegistration, setIsHallOwnerRegistration] = useState(false);
+  // const { login } = useAuth();
 
   const handleLogin = (userData) => {
-    login(userData);
+    // login(userData);
     onClose();
+  };
+
+  const handleSwitchToHallOwner = () => {
+    setIsHallOwnerRegistration(true);
+  };
+
+  const handleSwitchToRegularSignUp = () => {
+    setIsHallOwnerRegistration(false);
   };
 
   return (
@@ -74,7 +83,10 @@ const Login = ({ onClose }) => {
               className={`w-1/2 py-4 text-center font-semibold transition-all duration-300 ${
                 isSignIn ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
-              onClick={() => setIsSignIn(true)}
+              onClick={() => {
+                setIsSignIn(true);
+                setIsHallOwnerRegistration(false);
+              }}
             >
               Sign In
             </button>
@@ -82,7 +94,10 @@ const Login = ({ onClose }) => {
               className={`w-1/2 py-4 text-center font-semibold transition-all duration-300 ${
                 !isSignIn ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
-              onClick={() => setIsSignIn(false)}
+              onClick={() => {
+                setIsSignIn(false);
+                setIsHallOwnerRegistration(false);
+              }}
             >
               Sign Up
             </button>
@@ -91,8 +106,10 @@ const Login = ({ onClose }) => {
         <div className="p-8">
           {isSignIn ? (
             <SignIn onLogin={handleLogin} />
+          ) : isHallOwnerRegistration ? (
+            <HallOwnerRegistration onSwitchToRegularSignUp={handleSwitchToRegularSignUp} />
           ) : (
-            <SignUp onSignUp={handleLogin} />
+            <SignUp onSignUp={handleLogin} onSwitchToHallOwner={handleSwitchToHallOwner} />
           )}
         </div>
       </div>

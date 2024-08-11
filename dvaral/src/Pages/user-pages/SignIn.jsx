@@ -171,15 +171,16 @@ const SignIn = ({ onLogin }) => {
         if (res.status === 200 && res.data.role == 'USER') {
             authService.setToken(res.data.token)
             navigate('/dashboard');
-            setTimeout(() => {
-            }, 3000)
+            
 
         }
         else if(res.status === 200 && res.data.role === 'MANAGER'){
+          authService.setToken(res.data.token)
           navigate('/manager-dashboard');
         }
 
         else if (res.status === 200 && res.data.role === 'ADMIN'){
+          authService.setToken(res.data.token)
           navigate('/request-management');
         }
     };

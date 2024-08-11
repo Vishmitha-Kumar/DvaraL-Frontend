@@ -101,16 +101,54 @@
 //   );
 // }
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin } from "lucide-react";
+
+import { getAllHalls } from '../../services/api';
 
 const notify = () => toast.success('Added to your favorites!');
 
-export function BookingCard({ locationFilter = '', propertyFilter = '', amenitiesFilter = [] }) {
+export function BookingCard() {
+
+  const navigate = useNavigate();
+
+  const [halls, setHalls] = useState([
+    {
+      hallID: '',
+      hallOwner : '',
+      hallName : '',
+      hallType : '',
+      hallLocation : '',
+      hallDescription : '',
+      hallRating : '',
+      hallAddress : '',
+      hallContact : '',
+      capacity : '',
+      hallPrice : ''
+    }
+  ]);
 
 
+  const fetchAllHalls = async () => {
+
+    const res = await getAllHalls();
+    console.log(res);
+    setHalls(res.data);
+  };
+  
+  useEffect(() => {
+    console.log("use");
+    fetchAllHalls()
+},[])
+
+  const hallView = (hallID) => {
+  navigate(`/hall-view/${hallID}`)
+  }
+
+
+  // console.log()
 
   const amenities = [
     { icon: DollarSign, tooltip: "$129 per night", name: "Affordable" },
@@ -120,7 +158,7 @@ export function BookingCard({ locationFilter = '', propertyFilter = '', amenitie
     { icon: Flame, tooltip: "Fire alert", name: "Fire Alert" },
   ];
 
-  const bookingCards = [
+  const cardsToDisplay = [
     {
       id: 1,
       title: "Wooden House, Florida",
@@ -155,28 +193,28 @@ export function BookingCard({ locationFilter = '', propertyFilter = '', amenitie
 
   ];
 
-  const filteredCards = useMemo(() => {
-    return bookingCards.filter(card => {
-      const locationMatch = card.location.toLowerCase().includes(locationFilter.toLowerCase());
-      const propertyMatch = card.propertyType.toLowerCase().includes(propertyFilter.toLowerCase());
-      const amenitiesMatch = amenitiesFilter.length === 0 || amenitiesFilter.every(amenity => card.amenities.includes(amenity));
-      return locationMatch && propertyMatch && amenitiesMatch;
-    });
-  }, [locationFilter, propertyFilter, amenitiesFilter]);
+  // const filteredCards = useMemo(() => {
+  //   return bookingCards.filter(card => {
+  //     const locationMatch = card.location.toLowerCase().includes(locationFilter.toLowerCase());
+  //     const propertyMatch = card.propertyType.toLowerCase().includes(propertyFilter.toLowerCase());
+  //     const amenitiesMatch = amenitiesFilter.length === 0 || amenitiesFilter.every(amenity => card.amenities.includes(amenity));
+  //     return locationMatch && propertyMatch && amenitiesMatch;
+  //   });
+  // }, [locationFilter, propertyFilter, amenitiesFilter]);
 
-  const cardsToDisplay = filteredCards.length > 0 ? filteredCards : bookingCards;
+  // const cardsToDisplay = filteredCards.length > 0 ? filteredCards : bookingCards;
 
   return (
     <div>
-      {cardsToDisplay.length > 0 ? (
+      {halls.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {cardsToDisplay.map((card) => (
-            <div key={card.id} className="h-[70vh] bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-104 transition duration-300">
+          {halls.map((hall) => (
+            <div key={hall.hallID} className="h-[70vh] bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-104 transition duration-300">
               <div className="relative">
                 <img
                   className="w-full h-48 object-cover"
-                  src={card.image}
-                  alt={card.title}
+                  src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+                  alt={hall.hallName}
                 />
                 <button onClick={notify}
                   className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
@@ -187,21 +225,22 @@ export function BookingCard({ locationFilter = '', propertyFilter = '', amenitie
               </div>
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <Link to = "/hall-view">
-                  <h2 className="text-xl font-semibold text-blue-700 cursor-pointer">{card.title}</h2>
-                  </Link>
+                  <button onClick={() => hallView(hall.hallID)}>
+                    <h2 className="text-xl font-semibold text-blue-700 cursor-pointer">{hall.hallName}</h2>
+                  </button>
+      
                   <div className="flex items-center bg-blue-100 rounded-full px-2 py-1">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                    <span className="ml-1 text-blue-600 font-semibold">{card.rating}</span>
+                    <span className="ml-1 text-blue-600 font-semibold">{hall.hallRating}</span>
                   </div>
                 </div>
                 <div className="flex items-center text-gray-600 mb-2">
                   <MapPin className="h-4 w-4 mr-1" />
-                  <span>{card.location}</span>
+                  <span>{hall.hallLocation}</span>
                 </div>
-                <p className="text-gray-600 mb-4 line-clamp-3">{card.description}</p>
+                <p className="text-gray-600 mb-4 line-clamp-3">{hall.hallDescription}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {amenities.map((item, index) => (
                     <div key={index} className="relative group">
@@ -214,12 +253,11 @@ export function BookingCard({ locationFilter = '', propertyFilter = '', amenitie
                     </div>
                   ))}
                 </div>
-                <Link to = '/hall-view'>
-                <button className="w-full bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center">
-                  <BookMarked className="h-5 w-5 mr-2" />
-                  <span>Reserve Now</span>
-                </button>
-                </Link>
+              
+                  <button className="w-full bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center" onClick={() => hallView(hall.hallID)}>
+                    <BookMarked className="h-5 w-5 mr-2" />
+                    <span>Reserve Now</span>
+                  </button>
               </div>
             </div>
           ))}

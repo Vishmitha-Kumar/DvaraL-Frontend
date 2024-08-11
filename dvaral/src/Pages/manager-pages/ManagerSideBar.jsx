@@ -6,7 +6,7 @@ const ManagerSideBar = () => {
         { name: "Dashboard", icon: LayoutDashboard, href: "/manager-dashboard" },
         { name: "All Requests", icon: ClipboardList, href: "/hall-requests" },
         { name: "Pending Requests", icon: Clock, href: "/pending-requests" },
-        { name: "Your Hall", icon: Building, href: "/view-hall" },
+        { name: "Your Hall", icon: Building, href: "/add-hall" },
         { name: "Edit Hall", icon: Edit, href: "/edit-hall" },
     ];
 

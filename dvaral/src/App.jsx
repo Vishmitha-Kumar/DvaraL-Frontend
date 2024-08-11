@@ -12,6 +12,7 @@ import ManagerDashboard from './Pages/manager-pages/ManagerDashboard';
 import HallBookingRequests from './Pages/manager-pages/HallBookingRequests';
 import HallDetailsForm from './Pages/manager-pages/HallDetailsForm';
 import HallEditForm from './Pages/manager-pages/HallEditForm';
+import HallManagerRegistration from './Pages/manager-pages/HallManagerRegistration';
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/explore-page" element={<ExplorePage/>} />
         <Route path = "/dashboard" element = {<UserDashboard/>}/>
-        <Route path = "/hall-view" element = {<HallView/>}/>
+        <Route path = "/hall-view/:hallID" element = {<HallView/>}/>
         <Route path = "/reserved-halls" element = {<ReservedHall/>}/>
         <Route path = "/favourite-halls" element = {<Favourites/>}/>
         <Route path = "/about" element = {<About/>}/>
@@ -35,6 +36,7 @@ function App() {
         <Route path = "/hall-requests" element = {<HallBookingRequests/>} />
         <Route path = "/add-hall" element = {<HallDetailsForm/>} />
         <Route path = "/edit-hall" element = {<HallEditForm/>} />
+        <Route path = "/hall-owner-registration" element = {<HallManagerRegistration/>} />
       </Routes>
 
     </>
