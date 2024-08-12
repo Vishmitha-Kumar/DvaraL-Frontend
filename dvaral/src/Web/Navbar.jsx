@@ -130,14 +130,18 @@ import React, { useState } from 'react';
 import { PackageOpen, Menu, X, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Login from '../Pages/user-pages/Login';
-import { useAuth } from '../Web/AuthContext';
+
+  
+import { authService } from '../services/auth';
 
 const Navbar = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
+
+    const token = localStorage.getItem("token");
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { isAuthenticated, user, logout } = useAuth();
+    // const { isAuthenticated, user, logout } = useAuth();
 
     const navItems = [
         { label: 'Home', href: '/' },
@@ -149,6 +153,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         navigate('/');
+        localStorage.clear("token");
         logout();
         
     };
@@ -180,7 +185,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="flex items-center">
-                        {isAuthenticated ? (
+                        {token != null ? (
                             <div className="relative group">
                                 <button className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-['Poppins']">
                                     <User className="mr-2 h-5 w-5" />

@@ -128,6 +128,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             }`}
                                             name="hallOwner"
                                             id="hallOwner"
+                                            placeholder='Hall Owner'
                                             defaultValue={formData.hallOwner}
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
