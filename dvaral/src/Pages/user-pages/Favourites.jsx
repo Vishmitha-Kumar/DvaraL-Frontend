@@ -4,12 +4,12 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../Web/Navbar";
 import UserSideBar from './UserSideBar';
 
-import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin, MoveRight} from "lucide-react";
+import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin, MoveRight } from "lucide-react";
 import { Button } from '@mui/material';
 
 
 
-import { getFavsForUser } from "../../services/api";
+import { getFavsForUser, deleteFavHall } from "../../services/api";
 
 
 const Favourites = () => {
@@ -35,17 +35,38 @@ const Favourites = () => {
         }
     ]);
 
-    const fetchAllFavs = async () => {
 
-        const res = await getFavsForUser();
-        console.log(res.data[0]);
-        setHalls(res.data);
+
+    const fetchAllFavs = async () => {
+        try {
+            const res = await getFavsForUser();
+            setHalls(res.data.map(favObj => ({
+                ...favObj,
+                isFavorite: true 
+            })));
+        } catch (error) {
+            console.error("Error fetching favorites:", error);
+        }
     };
+
+    const toggleFavorite = (hallID) => {
+        setHalls(prevHalls => 
+            prevHalls.map(hall => 
+                hall.hall.hallID === hallID 
+                    ? { ...hall, isFavorite: !hall.isFavorite }
+                    : hall
+            )
+        );
+        
+    };
+
 
     useEffect(() => {
         console.log("favss");
         fetchAllFavs()
     }, [])
+
+    
 
     const amenities = [
         { icon: DollarSign, tooltip: "$129 per night", name: "Affordable" },
@@ -85,11 +106,15 @@ const Favourites = () => {
                                                     src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
                                                     alt={favObj.hall.hallName}
                                                 />
-                                                <button onClick={() => addFavs(favObj.hall.hallID)}
+                                                <button
+                                                    onClick={() => toggleFavorite(favObj.hall.hallID)}
                                                     className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
-                                                    aria-label="Like"
+                                                    aria-label="Toggle Favorite"
                                                 >
-                                                    <Heart className="h-6 w-6" />
+                                                    <Heart
+                                                        style={{ fill: favObj.isFavorite ? 'red' : 'none', color: favObj.isFavorite ? 'red' : 'white' }}
+                                                        className="h-6 w-6"
+                                                    />
                                                 </button>
                                             </div>
                                             <div className="p-6">

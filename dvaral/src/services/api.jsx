@@ -59,5 +59,12 @@ const getReservedHallsForUser = () =>
     axiosInstance.get(`${baseURL}/v2/hall/fetch/booked-by-user`);
 
 
-export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall, getRequestForManager, updateBookingStatus, addToFav, getFavsForUser, getReservedHallsForUser}
+const getHallDetailsForOwner = () => 
+    axiosInstance.get(`${baseURL}/v2/halls/fetch/by/manager`);
+
+const deleteFavHall = () =>
+    axiosInstance.delete(`${baseURL}/v2/halls/remove-favourites`)
+
+
+export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall, getRequestForManager, updateBookingStatus, addToFav, getFavsForUser, getReservedHallsForUser, getHallDetailsForOwner, deleteFavHall }
 

@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     User, Home, Type, MapPin, FileText, Star, Phone, Users, DollarSign,
     Wifi, Wind, Utensils, Car, Bed, Edit, Save, X, Check
 } from 'lucide-react';
+
 import ManNavBar from './ManNavBar';
 import ManagerSideBar from './ManagerSideBar';
 import Modal from './Modal';
 
+import { getHallDetailsForOwner } from '../../services/api';
+
 
 const HallEditForm = ({ initialData, onSubmit }) => {
+
+
+
     const [isEditing, setIsEditing] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [formData, setFormData] = useState(initialData || {
         hallOwner: '',
         hallName: '',
@@ -30,6 +37,28 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         const { name, value } = e.target;
         setFormData(prevData => ({ ...prevData, [name]: value }));
     };
+
+    const fetchAllRegisteredHalls = async () => {
+        try {
+            const res = await getHallDetailsForOwner();
+            console.log(res);
+            if (res.data) {
+                setFormData(prevData => ({
+                    ...prevData,
+                    ...res.data,
+                    hallRating: res.data.hallRating || 0,
+                    capacity: res.data.capacity || 0,
+                    hallPrice: res.data.hallPrice || 0,
+                }));
+            }
+        } catch (error) {
+            console.error("Error fetching hall details:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAllRegisteredHalls();
+    }, []);
 
     const toggleEdit = () => {
         if (!isEditing) {
@@ -99,10 +128,9 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             }`}
                                             name="hallOwner"
                                             id="hallOwner"
-                                            placeholder="Hall Owner"
+                                            defaultValue={formData.hallOwner}
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
-                                            defaultValue={formData.hallOwner}
                                         />
                                     </div>
                                 </div>
@@ -325,21 +353,3 @@ const HallEditForm = ({ initialData, onSubmit }) => {
 export default HallEditForm;
 
 
-{/* 
-</button>
-                                </div>
-                            )}
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <Modal 
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onConfirm={handleConfirmEdit}
-            />
-        </div>
-    );
-};
-
-export default HallEditForm; */}
