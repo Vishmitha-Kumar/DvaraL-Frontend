@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import { LayoutDashboard, ClipboardList, Clock, Building, Edit, Trash2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { LayoutDashboard, ClipboardList, Clock, Building, Edit, Trash2, Image } from "lucide-react";
+
+
 
 const ManagerSideBar = () => {
+
+
+
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     const sidebarLinks = [
         { name: "Dashboard", icon: LayoutDashboard, href: "/manager-dashboard" },
         { name: "All Requests", icon: ClipboardList, href: "/hall-requests" },
-        { name: "Pending Requests", icon: Clock, href: "/pending-requests" },
-        { name: "Your Hall", icon: Building, href: "/add-hall" },
+        { name: "Register Your Hall", icon: Building, href: "/add-hall" },
         { name: "Edit Hall", icon: Edit, href: "/edit-hall" },
+        { name: "Hall Images", icon: Image, href: "/hall-images" },
         { name: "Delete Hall", icon: Trash2, onClick: () => setShowDeleteConfirmation(true) },
     ];
 

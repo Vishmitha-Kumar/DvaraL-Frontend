@@ -1,10 +1,41 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import ManNavBar from "./ManNavBar";
 import ManagerSideBar from "./ManagerSideBar";
 import Requests from "./Requests";
 
+import { getRequestForManager } from '../../services/api';
+
+
+
 const ManagerDashboard = () => {
-  const [activeTab, setActiveTab] = useState("pending");
+
+  const [requests, setRequests] = useState([
+    {
+      bookingID: '',
+      userName: '',
+      userEmail: '',
+      userPhone: '',
+      requestedDate: '',
+      requestedTime: '',
+      noOfGuest: '',
+      eventType: '',
+      specialRequests: '',
+      bookingStatus: ''
+    }
+  ]);
+
+  const fetchAllRequests = async () => {
+
+    const res = await getRequestForManager();
+    setRequests(res.data);
+  };
+  
+  useEffect(() => {
+    fetchAllRequests()
+},[])
+
+
+  const [activeTab, setActiveTab] = useState("");
 
   const renderRequestsCard = (title, count, color) => (
     <div className={`bg-white rounded-lg shadow-md p-6 border-t-4 ${color}`}>
@@ -25,25 +56,25 @@ const ManagerDashboard = () => {
             {renderRequestsCard("Approved Requests", 10, "border-green-500")}
             {renderRequestsCard("Rejected Requests", 2, "border-red-500")}
           </div>
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <div className="border-b border-gray-200">
               <nav className="-mb-px flex space-x-8">
-                {["pending", "approved", "rejected"].map((tab) => (
+                {requests.map((request) => (
                   <button
-                    key={tab}
+                    key={request.bookingStatus}
                     className={`py-4 px-1 text-center border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out ${
-                      activeTab === tab
-                        ? `border-${tab === 'pending' ? 'yellow' : tab === 'approved' ? 'green' : 'red'}-500 text-${tab === 'pending' ? 'yellow' : tab === 'approved' ? 'green' : 'red'}-600`
+                      activeTab === request.bookingStatus
+                        ? `border-${request.bookingStatus === 'Pending' ? 'yellow' : request.bookingStatus === 'approved' ? 'green' : 'red'}-500 text-${request.bookingStatus === 'Pending' ? 'yellow' : request.bookingStatus === 'approved' ? 'green' : 'red'}-600`
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
-                    onClick={() => setActiveTab(tab)}
+                    onClick={() => setActiveTab(request.bookingStatus)}
                   >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)} Requests
+                    {request.bookingStatus.charAt(0).toUpperCase() + request.bookingStatus.slice(1)} Requests
                   </button>
                 ))}
               </nav>
             </div>
-          </div>
+          </div> */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <Requests status={activeTab} />
           </div>

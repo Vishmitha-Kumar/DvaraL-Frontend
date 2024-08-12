@@ -25,26 +25,14 @@ const HallBookingRequests = () => {
   const fetchAllRequests = async () => {
 
     const res = await getRequestForManager();
-    // console.log(res);
-    // console.log("ID : " + res.data[0].bookingID );
     setRequests(res.data);
   };
   
   useEffect(() => {
-    // console.log("use");
     fetchAllRequests()
 },[])
 
 
-
-
-
-    // const [requests, setRequests] = useState([
-    //   { id: 1, userName: "John Doe", hallName: "Grand Ballroom", date: "2024-08-15", time: "14:00", guests: 100, purpose: "Wedding", status: "pending", additionalInfo: "Need special lighting arrangement" },
-    //   { id: 2, userName: "Jane Smith", hallName: "Conference Center", date: "2024-08-20", time: "09:00", guests: 50, purpose: "Corporate Meeting", status: "pending", additionalInfo: "Require projector and screen" },
-    //   { id: 3, userName: "Bob Johnson", hallName: "Garden Pavilion", date: "2024-08-25", time: "18:00", guests: 75, purpose: "Birthday Party", status: "pending", additionalInfo: "Outdoor setup preferred" },
-    // ]);
-  
     const [expandedRow, setExpandedRow] = useState(null);
   
     const handleRowClick = (id) => {
@@ -58,6 +46,8 @@ const HallBookingRequests = () => {
       setRequests(requests.map(request => 
         request.bookingID === id ? { ...request, status: action } : request
       ));
+      window.location.reload(false);
+
     };
   
     const getStatusColor = (status) => {

@@ -30,7 +30,6 @@ const ManNavBar = () => {
                         </span>
                     </Link>
                 </div>
-
                
 
                 <div className="flex items-center">
@@ -40,7 +39,7 @@ const ManNavBar = () => {
                                 <User className="mr-2 h-5 w-5" />
                                 Profile
                             </button>
-                            <div className="absolute right-0 w-48 mt-2 py-2 bg-red-600 border border-gray-200 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                            <div className="absolute right-0 w-40 mt-1 py-1 bg-red-500 border border-gray-200 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                                 <button onClick={handleLogout} className="block w-full px-4 py-2 text-sm text-white font-bold font-[Poppins] text-center">Logout</button>
                             </div>
                         </div>

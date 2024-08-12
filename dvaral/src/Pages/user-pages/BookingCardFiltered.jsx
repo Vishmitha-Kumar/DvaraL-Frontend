@@ -4,72 +4,59 @@ import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame } from "lucide-rea
 
 import React, { useState, useEffect } from "react";
 
+import { getAllHalls, addToFav } from '../../services/api';
+
+
 
 
 export default BookingCardFiltered =()=>{
-   
+
+    const [halls, setHalls] = useState([
+        {
+          hallID: '',
+          hallOwner : '',
+          hallName : '',
+          hallType : '',
+          hallLocation : '',
+          hallDescription : '',
+          hallRating : '',
+          hallAddress : '',
+          hallContact : '',
+          capacity : '',
+          hallPrice : ''
+        }
+      ]);
 
 
-    const bookingCards = [
-        {
-            id: 1,
-            title: "Wooden House, Florida",
-            image: "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.",
-            rating: 5.0,
-            price: 129,
-            type: "house"
-        },
-        {
-            id: 2,
-            title: "Beachfront Villa, Malibu",
-            image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Luxurious beachfront villa with stunning ocean views, private pool, and direct access to the sandy shores of Malibu.",
-            rating: 4.9,
-            price: 599,
-            type: "villa"
-        },
-        {
-            id: 3,
-            title: "Mountain Cabin, Aspen",
-            image: "https://images.unsplash.com/photo-1518732714860-b62714ce0c59?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Cozy mountain retreat perfect for skiing enthusiasts, featuring a fireplace, hot tub, and breathtaking mountain views.",
-            rating: 4.8,
-            price: 299,
-            type: "cabin"
-        },
-        {
-            id: 4,
-            title: "City Loft, New York",
-            image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Modern and stylish loft in the heart of Manhattan, close to all the attractions and featuring a rooftop terrace.",
-            rating: 4.7,
-            price: 249,
-            type: "apartment"
-        },
-        {
-            id: 5,
-            title: "Tropical Bungalow, Bali",
-            image: "https://images.unsplash.com/photo-1570213489059-0aac6626cade?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Exotic bungalow surrounded by lush tropical gardens, featuring a private pool and traditional Balinese architecture.",
-            rating: 4.9,
-            price: 179,
-            type: "bungalow"
-        },
-    ];
+    const fetchAllHalls = async () => {
 
-    useEffect(() => {
-        setFilteredCards(bookingCards);
-    }, []);
+        const res = await getAllHalls();
+        console.log(res);
+        setHalls(res.data);
+      };
+      
+      useEffect(() => {
+        console.log("use");
+        fetchAllHalls()
+    },[])
 
-   
 
+    const addFavs = async (hallID) =>{
+
+        const res = await addToFav(hallID);
+        if(res.status === 200){
+          toast.success("Added to favorites");
     
+    
+        }
+
+      }
+
 
     return(
         <>
            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 bg-gray-100">
-                    {filteredCards.map((card) => (
+                    {halls.map((card) => (
                         <div key={card.id} className="bg-white rounded-xl h-[65vh] w-[29vw] shadow-lg overflow-hidden cursor-pointer transform hover:scale-105 transition duration-300">
                             <div className="relative">
                                 <img

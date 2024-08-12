@@ -8,17 +8,20 @@ import ManNavBar from './ManNavBar';
 import ManagerSideBar from './ManagerSideBar';
 import Modal from './Modal';
 
-import { getHallDetailsForOwner } from '../../services/api';
+import axios from 'axios';
+
+import { getHallDetailsForOwner, editHallDetails } from '../../services/api';
 
 
 const HallEditForm = ({ initialData, onSubmit }) => {
 
-
+    const [hID, setHID] = useState(null);
 
     const [isEditing, setIsEditing] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [formData, setFormData] = useState(initialData || {
+        // hallID : '',
         hallOwner: '',
         hallName: '',
         hallType: '',
@@ -30,7 +33,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         hallContact: '',
         capacity: 0,
         hallPrice: 0,
-        hallAmenities: [],
+        // hallAmenities: [],
     });
 
     const handleInputChange = (e) => {
@@ -42,19 +45,56 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         try {
             const res = await getHallDetailsForOwner();
             console.log(res);
-            if (res.data) {
+            if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+                const hallData = res.data[0];
+                setHID(hallData.hallID);
+                // hid = (hallData.hallID); 
                 setFormData(prevData => ({
                     ...prevData,
-                    ...res.data,
-                    hallRating: res.data.hallRating || 0,
-                    capacity: res.data.capacity || 0,
-                    hallPrice: res.data.hallPrice || 0,
+                    hallOwner: hallData.hallOwner || '',
+                    hallName: hallData.hallName || '',
+                    hallType: hallData.hallType || '',
+                    hallLocation: hallData.hallLocation || '',
+                    hallDescription: hallData.hallDescription || '',
+                    hallStatus: hallData.hallStatus || '',
+                    hallRating: parseFloat(hallData.hallRating) || 0,
+                    hallAddress: hallData.hallAddress || '',
+                    hallContact: hallData.hallContact || '',
+                    capacity: parseInt(hallData.capacity, 10) || 0,
+                    hallPrice: parseFloat(hallData.hallPrice) || 0,
+                    // hallAmenities: hallData.hallAmenitiesList || [],
                 }));
             }
         } catch (error) {
             console.error("Error fetching hall details:", error);
         }
     };
+
+    // console.log("Hall:  " + formData.hallID);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (isEditing) {
+            try {
+
+                console.log(hID);
+       
+                const response = await editHallDetails(hID, formData);
+                //      {
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // });
+                console.log("Hall updated successfully:", response.data);
+                
+                onSubmit(response.data);
+                setIsEditing(false);
+            } catch (error) {
+                console.error("Error updating hall details:", error);
+            }
+        }
+    };
+    
 
     useEffect(() => {
         fetchAllRegisteredHalls();
@@ -73,13 +113,13 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         setIsModalOpen(false);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (isEditing) {
-            onSubmit(formData);
-            setIsEditing(false);
-        }
-    };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (isEditing) {
+    //         onSubmit(formData);
+    //         setIsEditing(false);
+    //     }
+    // };
 
 
 
@@ -227,7 +267,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             placeholder="Hall Rating"
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
-                                            defaultValue={formData.hallRating}
+                                            value={formData.hallRating}
                                         />
                                     </div>
                                 </div>
@@ -285,7 +325,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             placeholder="Capacity"
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
-                                            defaultValue={formData.capacity}
+                                            value={formData.capacity}
                                         />
                                     </div>
                                 </div>
@@ -305,7 +345,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             placeholder="Hall Price"
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
-                                            defaultValue={formData.hallPrice}
+                                            value={formData.hallPrice}
                                         />
                                     </div>
                                 </div>

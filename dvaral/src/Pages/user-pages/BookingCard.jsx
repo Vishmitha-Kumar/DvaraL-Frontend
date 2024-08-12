@@ -106,7 +106,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin } from "lucide-react";
 
-import { getAllHalls, addToFav } from '../../services/api';
+import { getAllHalls, addToFav, getFavsForUser, deleteFavHall } from '../../services/api';
 
 
 const notify = () => toast.success('Added to your favorites!');
@@ -115,7 +115,7 @@ export function BookingCard() {
 
   const navigate = useNavigate();
 
-  const [halls, setHalls] = useState([
+  const [halls, setHalls] = useState([  
     {
       hallID: '',
       hallOwner : '',
@@ -127,8 +127,34 @@ export function BookingCard() {
       hallAddress : '',
       hallContact : '',
       capacity : '',
-      hallPrice : ''
+      hallPrice : '',
+      hallLogo:'',
     }
+  
+  ]);
+  const [fhalls, setFHalls] = useState([
+    {
+      users:{
+          email : '',
+          name : '',
+          id : ''
+
+      },
+
+      hall: {
+          hallID: '',
+          hallOwner: '',
+          hallName: '',
+          hallType: '',
+          hallLocation: '',
+          hallDescription: '',
+          hallRating: '',
+          hallAddress: '',
+          hallContact: '',
+          capacity: '',
+          hallPrice: ''
+      }
+  }
   ]);
 
 
@@ -148,23 +174,57 @@ export function BookingCard() {
   navigate(`/hall-view/${hallID}`)
   }
 
+  const fetchAllFavs = async () => {
+    try {
+        const res = await getFavsForUser();
+        console.log(res);
+        
+        setFHalls(res.data.map(favObj => ({
+            ...favObj,
+            isFavorite: true 
+        })));
+    } catch (error) {
+        console.error("Error fetching favorites:", error);
+    }
+};
+
+useEffect(() => {
+  console.log("favss");
+  fetchAllFavs()
+}, [])
+
+
+
   const addFavs = async (hallID) =>{
 
     const res = await addToFav(hallID);
     if(res.status === 200){
       toast.success("Added to favorites");
-
-
     }
-    console.log("fav");
-    
+    // console.log("fav");
+    fetchAllFavs();
+    // navigate(0);
+    // window.location.reload(false);
     notify;
   }
 
+  
+  const delFavs =  async (favObj) => {
+    try{
+         const res = await deleteFavHall(favObj);
 
+         if(res.status === 200)
+            toast.success("Removed from favorites");
+         fetchAllFavs();
+         fetchAllHalls();
+        // navigate(0);
+        // window.location.reload(false);
 
+    }catch (error) {
+        console.error("Error deleting favorites:", error);
+    }
+}
 
-  // console.log()
 
   const amenities = [
     { icon: DollarSign, tooltip: "$129 per night", name: "Affordable" },
@@ -174,70 +234,43 @@ export function BookingCard() {
     { icon: Flame, tooltip: "Fire alert", name: "Fire Alert" },
   ];
 
-  const cardsToDisplay = [
-    {
-      id: 1,
-      title: "Wooden House, Florida",
-      location: "Florida, USA",
-      image: "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      description: "Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.",
-      rating: 5.0,
-      propertyType: "House",
-      amenities: ["Affordable", "Free WiFi", "2 Bedrooms", "HDTV", "Fire Alert"],
-    },
-    {
-      id: 2,
-      title: "Beachfront Villa, Malibu",
-      location: "Malibu, California",
-      image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      description: "Luxurious beachfront villa with stunning ocean views, private pool, and direct access to the sandy shores of Malibu.",
-      rating: 4.9,
-      propertyType: "Villa",
-      amenities: ["Free WiFi", "HDTV", "Fire Alert"],
-    },
-    {
-      id: 3,
-      title: "Mountain Cabin, Aspen",
-      location: "Malibu, California",
-      image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      description: "Luxurious beachfront villa with stunning ocean views, private pool, and direct access to the sandy shores of Malibu.",
-      rating: 4.9,
-      propertyType: "Villa",
-      amenities: ["Free WiFi", "HDTV", "Fire Alert"],
-    },
 
-
-  ];
-
-  // const filteredCards = useMemo(() => {
-  //   return bookingCards.filter(card => {
-  //     const locationMatch = card.location.toLowerCase().includes(locationFilter.toLowerCase());
-  //     const propertyMatch = card.propertyType.toLowerCase().includes(propertyFilter.toLowerCase());
-  //     const amenitiesMatch = amenitiesFilter.length === 0 || amenitiesFilter.every(amenity => card.amenities.includes(amenity));
-  //     return locationMatch && propertyMatch && amenitiesMatch;
-  //   });
-  // }, [locationFilter, propertyFilter, amenitiesFilter]);
-
-  // const cardsToDisplay = filteredCards.length > 0 ? filteredCards : bookingCards;
 
   return (
     <div>
-      {halls.length > 0 ? (
+      {halls.length > 0 && halls.length < 4 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {halls.map((hall) => (
             <div key={hall.hallID} className="h-[70vh] bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-104 transition duration-300">
               <div className="relative">
                 <img
                   className="w-full h-48 object-cover"
-                  src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+                  src={hall.hallLogo}
+                  // src={"https://image.wedmegood.com/resized/1000X/uploads/member/2876203/1723188194_WhatsApp_Image_2024_07_27_at_1.00.25_PM.jpeg"}
                   alt={hall.hallName}
                 />
-                <button onClick= {() => addFavs(hall.hallID)}
+                {
+                  fhalls.find(e => e.hall.hallID === hall.hallID) ? (
+                    <button style = {{ fill: 'red', color: 'red'}} onClick= {() => delFavs(fhalls.find(e => e.hall.hallID))}
                   className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
                   aria-label="Like"
                 >
                   <Heart className="h-6 w-6" />
                 </button>
+
+
+                  ):(
+                    <button onClick= {() => addFavs(hall.hallID)}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
+                  aria-label="Like"
+                >
+                  <Heart className="h-6 w-6" />
+                </button>
+
+                  )
+                }
+               
+                
               </div>
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">

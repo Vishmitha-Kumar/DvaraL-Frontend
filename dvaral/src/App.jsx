@@ -13,6 +13,7 @@ import HallBookingRequests from './Pages/manager-pages/HallBookingRequests';
 import HallDetailsForm from './Pages/manager-pages/HallDetailsForm';
 import HallEditForm from './Pages/manager-pages/HallEditForm';
 import HallManagerRegistration from './Pages/manager-pages/HallManagerRegistration';
+import HallImages from './Pages/manager-pages/HallImages';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path = "/hall-requests" element = {<HallBookingRequests/>} />
         <Route path = "/add-hall" element = {<HallDetailsForm/>} />
         <Route path = "/edit-hall" element = {<HallEditForm/>} />
+        <Route path = "/hall-images" element = {<HallImages/>} />
         <Route path = "/hall-owner-registration" element = {<HallManagerRegistration/>} />
       </Routes>
 

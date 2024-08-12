@@ -62,8 +62,8 @@ const getReservedHallsForUser = () =>
 const getHallDetailsForOwner = () => 
     axiosInstance.get(`${baseURL}/v2/halls/fetch/by/manager`);
 
-const deleteFavHall = () =>
-    axiosInstance.delete(`${baseURL}/v2/halls/remove-favourites`);
+const deleteFavHall = (favObj) =>
+    axiosInstance.delete(`${baseURL}/v2/halls/remove-favourites`, {data: favObj});
 
 const getAllUsersByManager = () => 
     axiosInstance.get(`${baseURL}/v2/auth/fetch/allUser`);
@@ -71,8 +71,11 @@ const getAllUsersByManager = () =>
 const updateAccountStatus = (id, bookingStatus) =>
     axiosInstance.patch(`${baseURL}/v2/auth/manager-account/${id}`, {bookingStatus});
 
+const editHallDetails = (hID, formData) =>
+    axiosInstance.put(`${baseURL}/v2/halls/edit/hall/${hID}`, {formData});
+
 
 export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall, getRequestForManager,
      updateBookingStatus, addToFav, getFavsForUser, getReservedHallsForUser, getHallDetailsForOwner, deleteFavHall,
-      getAllUsersByManager, updateAccountStatus }
+      getAllUsersByManager, updateAccountStatus, editHallDetails }
 

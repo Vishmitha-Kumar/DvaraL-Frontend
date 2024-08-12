@@ -31,6 +31,18 @@ const getUserIdByEmail = async (email) => {
     }
 }
 
+const getUserName = async () => {
+    try{
+        const email = getUserEmail;
+        
+        const response = await axiosInstance.get('/v2/auth/getUserName', email);
+        return response.data;
+    }catch (error) {
+        console.error('Error fetching user ID by email:', error);
+        throw error;
+    }
+}
+
 const getUserID = async () => {
     const email = getUserEmail();
     if (email) {
@@ -63,4 +75,4 @@ const SignIn = (email, password) => axiosInstance.post("v1/auth/authenticate", {
 const SignOut = () => localStorage.clear()
 
 
-export const authService = { getToken, setToken, getUserEmail, getUserIdByEmail, getUserID, getUserRole, isLoggedIn, SignIn, SignOut };
+export const authService = { getToken, setToken,getUserName, getUserEmail, getUserIdByEmail, getUserID, getUserRole, isLoggedIn, SignIn, SignOut };

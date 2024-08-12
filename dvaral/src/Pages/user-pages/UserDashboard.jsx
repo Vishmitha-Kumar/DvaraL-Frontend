@@ -2,11 +2,17 @@ import React from "react";
 import Navbar from '../../Web/Navbar';
 import { BookingCard } from "./BookingCard";
 
+// import { authService } from "../../services/auth";
+
 
 import UserSideBar from './UserSideBar';
 
 
 const UserDashboard = () => { 
+
+  // const userName = authService.getUserName();
+  // console.log(userName);
+  
 
   
   

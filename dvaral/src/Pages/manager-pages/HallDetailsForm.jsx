@@ -17,6 +17,7 @@ const HallDetailsForm = () => {
         hallContact: '',
         capacity: 0,
         hallPrice: 0,
+        hallLogo: '',
         hallAmenities: [],
     });
 
@@ -31,10 +32,10 @@ const HallDetailsForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
-        const res = await addHallDetails(formData.hallOwner, formData.hallName, formData.hallType, formData.hallLocation, formData.hallDescription, formData.hallAddress, formData.capacity, formData.hallPrice, 4.5, "Available" , formData.hallContact);
+        const res = await addHallDetails(formData.hallOwner, formData.hallName, formData.hallType, formData.hallLocation, formData.hallDescription, formData.hallAddress, formData.capacity, formData.hallPrice, 4.5, "Available" , formData.hallContact, formData.hallLogo);
 
-        if(res.status === 200)
-            toast.success("FGIHJVKLDF;V");
+        if(res.status === 201)
+            toast.success(formData.hallName + " has been successfully added!");
     };
 
     return (
@@ -131,6 +132,17 @@ const HallDetailsForm = () => {
                                         name="hallPrice"
                                         id="hallPrice"
                                         type="number"
+                                        // value={formData.hallPrice}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="hallLogo" className="block text-sm font-medium text-gray-700 mb-1">Hall Logo URL</label>
+                                    <input
+                                        className="w-[205%] px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        name="hallLogo"
+                                        id="hallLogo"
+                                        type="text"
                                         // value={formData.hallPrice}
                                         onChange={handleInputChange}
                                     />

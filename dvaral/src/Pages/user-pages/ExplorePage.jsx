@@ -1,12 +1,66 @@
 import React, { useState, useEffect } from "react";
 import Navbar from '../../Web/Navbar';
 import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, Filter } from "lucide-react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
+import { getAllHalls, addToFav } from '../../services/api';
+
 
 const notify = () => toast.error('Sign in to perform actions');
 
 
 const ExplorePage = () => {
+
+    const navigate = useNavigate();
+
+    const token = localStorage.getItem("token");
+
+    const [halls, setHalls] = useState([
+        {
+            hallID: '',
+            hallOwner: '',
+            hallName: '',
+            hallType: '',
+            hallLocation: '',
+            hallDescription: '',
+            hallRating: '',
+            hallAddress: '',
+            hallContact: '',
+            capacity: '',
+            hallPrice: ''
+        }
+    ]);
+
+
+    const fetchAllHalls = async () => {
+
+        const res = await getAllHalls();
+        console.log(res);
+        setHalls(res.data);
+    };
+
+    useEffect(() => {
+        // console.log("use");
+        fetchAllHalls()
+    }, [])
+
+
+    const addFavs = async (hallID) => {
+
+        const res = await addToFav(hallID);
+        if (res.status === 200) {
+            toast.success("Added to favorites");
+
+
+        }
+
+    }
+
+    const hallView = (hallID) => {
+        navigate(`/hall-view/${hallID}`)
+    }
+
+
     const [filters, setFilters] = useState({
         priceRange: 1000,
         propertyType: 'all',
@@ -23,64 +77,18 @@ const ExplorePage = () => {
         { icon: Flame, tooltip: "Heating" },
     ];
 
-    const bookingCards = [
-        {
-            id: 1,
-            title: "Wooden House, Florida",
-            image: "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.",
-            rating: 5.0,
-            price: 129,
-            type: "house"
-        },
-        {
-            id: 2,
-            title: "Beachfront Villa, Malibu",
-            image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Luxurious beachfront villa with stunning ocean views, private pool, and direct access to the sandy shores of Malibu.",
-            rating: 4.9,
-            price: 599,
-            type: "villa"
-        },
-        {
-            id: 3,
-            title: "Mountain Cabin, Aspen",
-            image: "https://images.unsplash.com/photo-1518732714860-b62714ce0c59?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Cozy mountain retreat perfect for skiing enthusiasts, featuring a fireplace, hot tub, and breathtaking mountain views.",
-            rating: 4.8,
-            price: 299,
-            type: "cabin"
-        },
-        {
-            id: 4,
-            title: "City Loft, New York",
-            image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Modern and stylish loft in the heart of Manhattan, close to all the attractions and featuring a rooftop terrace.",
-            rating: 4.7,
-            price: 249,
-            type: "apartment"
-        },
-        {
-            id: 5,
-            title: "Tropical Bungalow, Bali",
-            image: "https://images.unsplash.com/photo-1570213489059-0aac6626cade?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            description: "Exotic bungalow surrounded by lush tropical gardens, featuring a private pool and traditional Balinese architecture.",
-            rating: 4.9,
-            price: 179,
-            type: "bungalow"
-        },
-    ];
 
     useEffect(() => {
-        setFilteredCards(bookingCards);
+        setFilteredCards(halls);
     }, []);
+
 
     const handleFilterChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFilters(prevFilters => ({
             ...prevFilters,
-            [name]: type === 'checkbox' 
-                ? checked 
+            [name]: type === 'checkbox'
+                ? checked
                     ? [...prevFilters.amenities, value]
                     : prevFilters.amenities.filter(item => item !== value)
                 : value
@@ -88,11 +96,11 @@ const ExplorePage = () => {
     };
 
     useEffect(() => {
-        const newFilteredCards = bookingCards.filter(card => {
+        const newFilteredCards = halls.filter(card => {
             return (
                 card.price <= filters.priceRange &&
                 (filters.propertyType === 'all' || card.type.toLowerCase() === filters.propertyType.toLowerCase()) &&
-                (filters.amenities.length === 0 || filters.amenities.every(amenity => 
+                (filters.amenities.length === 0 || filters.amenities.every(amenity =>
                     card.description.toLowerCase().includes(amenity.toLowerCase())
                 ))
             );
@@ -169,32 +177,59 @@ const ExplorePage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 bg-gray-100">
-                    {filteredCards.map((card) => (
-                        <div key={card.id} className="bg-white rounded-xl h-[68vh] w-[29vw] shadow-lg overflow-hidden cursor-pointer transform hover:scale-103 transition duration-300">
+                    {halls.map((card) => (
+                        <div key={card.hallID} className="bg-white rounded-xl h-[68vh] w-[29vw] shadow-lg overflow-hidden cursor-pointer transform hover:scale-103 transition duration-300">
                             <div className="relative">
                                 <img
                                     className="w-full h-48 object-cover"
-                                    src={card.image}
+                                    // src={card.image}
+                                    src={"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
                                     alt={card.title}
                                 />
-                                <button onClick={notify}
-                                    className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
-                                    aria-label="Like"
-                                >
-                                    <Heart className="h-6 w-6" />
-                                </button>
+                                {
+                                    token != null ? (
+                                        <button onClick={() => addFavs(card.hallID)}
+                                            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
+                                            aria-label="Like"
+                                        >
+                                            <Heart className="h-6 w-6" />
+                                        </button>
+
+                                    ) : (
+                                        <button onClick={notify}
+                                            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
+                                            aria-label="Like"
+                                        >
+                                            <Heart className="h-6 w-6" />
+                                        </button>
+
+                                    )
+                                }
+
                             </div>
                             <div className="p-6">
-                                <div className="flex justify-between items-center mb-4">               
-                                    <h2 onClick = {notify} className="text-xl font-semibold text-blue-900">{card.title}</h2>
+                                <div className="flex justify-between items-center mb-4">
+
+                                    {
+                                        token === null ? (
+                                            <h2 onClick={notify} className="text-xl font-semibold text-blue-900">{card.hallName}</h2>
+
+                                        ) : (
+                                            <button onClick={() => hallView(card.hallID)}>
+                                                <h2 className="text-xl font-semibold text-blue-900">{card.hallName}</h2>
+                                            </button>
+
+                                        )
+                                    }
+
                                     <div className="flex items-center bg-blue-100 rounded-full px-2 py-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
-                                        <span className="ml-1 text-blue-600 font-semibold">{card.rating}</span>
+                                        <span className="ml-1 text-blue-600 font-semibold">{card.hallRating}</span>
                                     </div>
                                 </div>
-                                <p className="text-gray-600 mb-4 line-clamp-3">{card.description}</p>
+                                <p className="text-gray-600 mb-4 line-clamp-3">{card.hallDescription}</p>
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {amenities.map((item, index) => (
                                         <div key={index} className="relative group">
@@ -208,11 +243,23 @@ const ExplorePage = () => {
                                     ))}
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-2xl font-bold text-blue-900">${card.price}/night</span>
-                                    <button className="bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center">
-                                        <BookMarked className="h-5 w-5 mr-2" />
-                                        <span className="text-center">Reserve</span>
-                                    </button>
+                                    <span className="text-2xl font-bold text-blue-900">${card.hallPrice}/night</span>
+                                    {
+                                        token === null ? (
+                                            <button  onClick={notify} className="bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center">
+                                            <BookMarked className="h-5 w-5 mr-2" />
+                                            <span className="text-center">Reserve</span>
+                                        </button>
+
+                                        ):(
+                                            <button  onClick={() => hallView(card.hallID)} className="bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 flex items-center justify-center">
+                                            <BookMarked className="h-5 w-5 mr-2" />
+                                            <span className="text-center">Reserve</span>
+                                        </button>
+
+                                        )
+                                    }
+                                   
                                 </div>
                             </div>
                         </div>

@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 
 import Navbar from "../../Web/Navbar";
 import UserSideBar from './UserSideBar';
+import toast from 'react-hot-toast';
+
 
 import { BookMarked, Heart, DollarSign, Wifi, Home, Tv, Flame, MapPin, MoveRight } from "lucide-react";
 import { Button } from '@mui/material';
@@ -18,6 +20,12 @@ const Favourites = () => {
 
     const [halls, setHalls] = useState([
         {
+            users:{
+                email : '',
+                name : '',
+                id : ''
+
+            },
 
             hall: {
                 hallID: '',
@@ -30,7 +38,8 @@ const Favourites = () => {
                 hallAddress: '',
                 hallContact: '',
                 capacity: '',
-                hallPrice: ''
+                hallPrice: '',
+                hallLogo: ''
             }
         }
     ]);
@@ -40,6 +49,8 @@ const Favourites = () => {
     const fetchAllFavs = async () => {
         try {
             const res = await getFavsForUser();
+            console.log(res);
+            
             setHalls(res.data.map(favObj => ({
                 ...favObj,
                 isFavorite: true 
@@ -48,6 +59,26 @@ const Favourites = () => {
             console.error("Error fetching favorites:", error);
         }
     };
+
+
+    const delFavs =  async (favObj) => {
+        try{
+             const res = await deleteFavHall(favObj);
+             if(res.status === 200)
+                toast.success("Removed from favorites");
+             setHalls(halls => halls.map(favHallObj => (
+                favHallObj.hall.hallID === favObj.hallID
+                ? { ...favHallObj, isFavorite: false } : favHallObj
+            )));
+
+            fetchAllFavs();
+
+            // window.location.reload(false);
+
+        }catch (error) {
+            console.error("Error deleting favorites:", error);
+        }
+    }
 
     const toggleFavorite = (hallID) => {
         setHalls(prevHalls => 
@@ -103,11 +134,13 @@ const Favourites = () => {
                                             <div className="relative">
                                                 <img
                                                     className="w-full h-48 object-cover"
-                                                    src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
+                                                    src = {favObj.hall.hallLogo}
+                                                    // src={"https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
                                                     alt={favObj.hall.hallName}
                                                 />
                                                 <button
-                                                    onClick={() => toggleFavorite(favObj.hall.hallID)}
+                                                    // onClick={() => toggleFavorite(favObj.hall.hallID)}
+                                                    onClick={() => delFavs(favObj)}
                                                     className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition duration-200"
                                                     aria-label="Toggle Favorite"
                                                 >
