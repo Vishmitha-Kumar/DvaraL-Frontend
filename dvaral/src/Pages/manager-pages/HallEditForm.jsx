@@ -34,6 +34,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         hallContact: '',
         capacity: 0,
         hallPrice: 0,
+        hallLogo : ''
         // hallAmenities: [],
     });
 
@@ -63,6 +64,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                     hallContact: hallData.hallContact || '',
                     capacity: parseInt(hallData.capacity, 10) || 0,
                     hallPrice: parseFloat(hallData.hallPrice) || 0,
+                    hallLogo: hallData.hallLogo || '',
                     // hallAmenities: hallData.hallAmenitiesList || [],
                 }));
             }
@@ -89,6 +91,7 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                     hallContact: formData.hallContact,
                     capacity: formData.capacity,
                     hallPrice: formData.hallPrice,
+                    hallLogo: formData.hallLogo,
                 };
     
                 const response = await editHallDetails(hID, payload);
@@ -355,6 +358,26 @@ const HallEditForm = ({ initialData, onSubmit }) => {
                                             disabled={!isEditing}
                                             onChange={handleInputChange}
                                             value={formData.hallPrice}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="hallLogo" className="block text-sm font-medium text-gray-700 mb-1">Hall Logo URL</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <DollarSign className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            className={`pl-10 w-[205%] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                                isEditing ? 'bg-white' : 'bg-gray-100'
+                                            }`}
+                                            type="number"
+                                            name="hallLogo"
+                                            id="hallLogo"
+                                            placeholder="Hall Logo URL"
+                                            disabled={!isEditing}
+                                            onChange={handleInputChange}
+                                            value={formData.hallLogo}
                                         />
                                     </div>
                                 </div>

@@ -42,7 +42,7 @@ const HallOwnerRegistration = ({ onSwitchToRegularSignUp }) => {
                     cpassword: ''
                     
                 });
-                toast.success("Registered successfully as Hall Owner!")
+                toast.success("wait Untill Your Account is verified by Admin!")
             // },)
         }
         else {

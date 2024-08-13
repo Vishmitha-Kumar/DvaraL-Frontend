@@ -14,7 +14,7 @@ const ManagerSideBar = () => {
         { name: "Register Your Hall", icon: Building, href: "/add-hall" },
         { name: "Edit Hall", icon: Edit, href: "/edit-hall" },
         // { name: "Hall Images", icon: Image, href: "/hall-images" },
-        { name: "Delete Hall", icon: Trash2, onClick: () => setShowDeleteConfirmation(true) },
+        // { name: "Delete Hall", icon: Trash2, onClick: () => setShowDeleteConfirmation(true) },
     ];
 
     const handleDelete = () => {
