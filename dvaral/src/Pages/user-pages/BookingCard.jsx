@@ -238,7 +238,7 @@ useEffect(() => {
 
   return (
     <div>
-      {halls.length > 0 && halls.length < 4 ? (
+      {halls.length > 0 ?(
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {halls.map((hall) => (
             <div key={hall.hallID} className="h-[70vh] bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-104 transition duration-300">

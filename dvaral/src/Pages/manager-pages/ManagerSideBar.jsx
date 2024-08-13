@@ -6,7 +6,6 @@ import { LayoutDashboard, ClipboardList, Clock, Building, Edit, Trash2, Image } 
 const ManagerSideBar = () => {
 
 
-
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     const sidebarLinks = [
@@ -14,7 +13,7 @@ const ManagerSideBar = () => {
         { name: "All Requests", icon: ClipboardList, href: "/hall-requests" },
         { name: "Register Your Hall", icon: Building, href: "/add-hall" },
         { name: "Edit Hall", icon: Edit, href: "/edit-hall" },
-        { name: "Hall Images", icon: Image, href: "/hall-images" },
+        // { name: "Hall Images", icon: Image, href: "/hall-images" },
         { name: "Delete Hall", icon: Trash2, onClick: () => setShowDeleteConfirmation(true) },
     ];
 

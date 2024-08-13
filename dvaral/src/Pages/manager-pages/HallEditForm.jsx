@@ -8,7 +8,8 @@ import ManNavBar from './ManNavBar';
 import ManagerSideBar from './ManagerSideBar';
 import Modal from './Modal';
 
-import axios from 'axios';
+import toast from 'react-hot-toast';
+
 
 import { getHallDetailsForOwner, editHallDetails } from '../../services/api';
 
@@ -76,26 +77,34 @@ const HallEditForm = ({ initialData, onSubmit }) => {
         e.preventDefault();
         if (isEditing) {
             try {
-
-                console.log(hID);
-       
-                const response = await editHallDetails(hID, formData);
-                //      {
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     }
-                // });
+                const payload = {
+                    hallOwner: formData.hallOwner,
+                    hallName: formData.hallName,
+                    hallType: formData.hallType,
+                    hallLocation: formData.hallLocation,
+                    hallDescription: formData.hallDescription,
+                    hallStatus: formData.hallStatus,
+                    hallRating: formData.hallRating,
+                    hallAddress: formData.hallAddress,
+                    hallContact: formData.hallContact,
+                    capacity: formData.capacity,
+                    hallPrice: formData.hallPrice,
+                };
+    
+                const response = await editHallDetails(hID, payload);
                 console.log("Hall updated successfully:", response.data);
-                
-                onSubmit(response.data);
+                toast.success(payload.hallName + " details updated successfully");
                 setIsEditing(false);
+                if (onSubmit && typeof onSubmit === 'function') {
+                    onSubmit(response.data);
+                }
+                // Update the local state
+                setFormData(response.data);
             } catch (error) {
                 console.error("Error updating hall details:", error);
             }
         }
     };
-    
-
     useEffect(() => {
         fetchAllRegisteredHalls();
     }, []);

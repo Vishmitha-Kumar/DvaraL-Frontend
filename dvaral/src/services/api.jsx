@@ -72,7 +72,7 @@ const updateAccountStatus = (id, bookingStatus) =>
     axiosInstance.patch(`${baseURL}/v2/auth/manager-account/${id}`, {bookingStatus});
 
 const editHallDetails = (hID, formData) =>
-    axiosInstance.put(`${baseURL}/v2/halls/edit/hall/${hID}`, {formData});
+    axiosInstance.put(`${baseURL}/v2/halls/edit/hall/${hID}`, formData);
 
 
 export {axiosInstance, SignUpData, addHallDetails, getAllHalls, getHallByid, bookHall, getRequestForManager,
